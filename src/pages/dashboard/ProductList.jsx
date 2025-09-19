@@ -79,12 +79,12 @@ function ProductList() {
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
 
-      if (parsedUser.role === "Admin") setIsAdmin(true);
-      if (parsedUser.role === "Manager" )
+      if (parsedUser?.role === "Admin") setIsAdmin(true);
+      if (parsedUser?.role === "Manager" )
         setIsManager(true);
-      if (parsedUser.role.toLowerCase() === "staff") setIsStaff(true);
-      if (parsedUser.role.toLowerCase() === "manager") setIsManager(true);
-      if (parsedUser.role.toLowerCase() === "user") setUser(true);
+      if (parsedUser?.role.toLowerCase() === "staff") setIsStaff(true);
+      if (parsedUser?.role.toLowerCase() === "manager") setIsManager(true);
+      if (parsedUser?.role.toLowerCase() === "user") setUser(true);
     }
   }, []);
 

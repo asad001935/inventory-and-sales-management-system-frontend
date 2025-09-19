@@ -19,10 +19,10 @@ function SupplierList() {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
-      if (parsedUser.role === "Manager" || parsedUser.role === "Admin") {
+      if (parsedUser?.role === "Manager" || parsedUser?.role === "Admin") {
         setIsManager(true);
       }
-      if (parsedUser.role === "Admin") {
+      if (parsedUser?.role === "Admin") {
         setIsAdmin(true);
       }
     }

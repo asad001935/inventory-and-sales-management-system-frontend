@@ -110,10 +110,10 @@ function UserList() {
             >
               <td className="px-4 py-2 border">{user.username}</td>
               <td className="px-4 py-2 border">{user.email}</td>
-              <td className="px-4 py-2 border font-medium">{user.role}</td>
+              <td className="px-4 py-2 border font-medium">{user?.role}</td>
               <td className="px-4 py-2 border">
                 <select
-                  value={user.role}
+                  value={user?.role}
                   onChange={(e) => handleRoleChange(user._id, e.target.value)}
                   className="border rounded px-2 py-1 text-sm"
                 >
