@@ -5,6 +5,7 @@ import Register from "./pages/auth/Register";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+
 import SupplierForm from "./pages/dashboard/SupplierForm";
 import SupplierList from "./pages/dashboard/SupplierList";
 import SupplierEdit from "./pages/dashboard/SupplierEdit";
@@ -27,10 +28,24 @@ import ContactForm from "./pages/dashboard/ContactForm";
 import ContactList from "./pages/dashboard/contactList";
 import Loader from "./pages/dashboard/Loader";
 
-
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    () => !!localStorage.getItem("token")
+  );
+
+  const [role, setRole] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        return parsedUser?.role || null;
+      }
+    } catch (err) {
+      console.error("Error parsing user from localStorage:", err);
+    }
+    return null;
+  });
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
@@ -39,7 +54,7 @@ function App() {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        if (parsedUser.role) {
+        if (parsedUser?.role) {
           setRole(parsedUser.role);
         }
       } catch (error) {
@@ -54,7 +69,7 @@ function App() {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-        if (parsedUser.role) {
+        if (parsedUser?.role) {
           setRole(parsedUser.role);
         }
       } catch (error) {
@@ -64,14 +79,12 @@ function App() {
   };
 
   const renderNavbar = () => {
-    if (!isLoggedIn) {
-      return <Navbar />;
-    }
-    if (role === "Manager") return <ManagerNavbar />;
+    if (!isLoggedIn) return <Navbar />;
     if (role === "Admin") return <AdminNavbar />;
+    if (role === "Manager") return <ManagerNavbar />;
     if (role === "Staff") return <StaffNavbar />;
-    if (role === "User" || role === "user") return <Navbar />;
-    return null;
+    if (role?.toLowerCase() === "user") return <Navbar />;
+    return <Navbar />;
   };
 
   return (
@@ -88,21 +101,16 @@ function App() {
         <Route path="/edit-product/:id" element={<ProductEdit />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/all-orders" element={<OrderList />} />
-        <Route path="/adminNavbar" element={<AdminNavbar />} />
-        <Route path="/managerNavbar" element={<ManagerNavbar />} />
-        <Route path="/staffNavbar" element={<StaffNavbar />} />
         <Route path="/" element={<HomeDashboard />} />
         <Route path="/about" element={<About />} />
         <Route path="/my-orders" element={<MyOrders />} />
         <Route path="/all-users" element={<UserList />} />
         <Route path="/staff-profile" element={<StaffProfile />} />
-        <Route path="/navbar" element={<Navbar />} />
         <Route path="/contact" element={<ContactForm />} />
         <Route path="/contact-forms" element={<ContactList />} />
         <Route path="/loader" element={<Loader />} />
-
       </Routes>
-        <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} />
       <Footer />
     </BrowserRouter>
   );
