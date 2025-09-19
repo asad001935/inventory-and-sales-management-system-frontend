@@ -4,7 +4,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./app.css";
+import "./App.css";
 import SupplierForm from "./pages/dashboard/SupplierForm";
 import SupplierList from "./pages/dashboard/SupplierList";
 import SupplierEdit from "./pages/dashboard/SupplierEdit";
