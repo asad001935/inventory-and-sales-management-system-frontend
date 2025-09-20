@@ -9,7 +9,7 @@ function CartPage() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const savedUser = localStorage.getItem("user");
-  const storedUser = savedUser || JSON.parse(localStorage.getItem("user")) || null;
+  const storedUser = savedUser ? JSON.parse(localStorage.getItem("user")) : null;
   const token = storedUser?.token;
 
   useEffect(() => {

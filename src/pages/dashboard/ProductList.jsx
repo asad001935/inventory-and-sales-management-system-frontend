@@ -77,7 +77,7 @@ function ProductList() {
 
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsedUser = savedUser|| JSON.parse(savedUser) || null;
+      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
 
       if (parsedUser?.role === "Admin") setIsAdmin(true);
       if (parsedUser?.role === "Manager" )

@@ -18,7 +18,7 @@ function SupplierList() {
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsedUser = savedUser || JSON.parse(savedUser) || null;
+      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
       if (parsedUser?.role === "Manager" || parsedUser?.role === "Admin") {
         setIsManager(true);
       }
