@@ -22,7 +22,7 @@ function OrderList() {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       const parsedUser = savedUser ? JSON.parse(savedUser) : null;
-      if (parsedUser?.role === "Manager" || parsedUser?.role === "Admin") {
+      if (parsedUser?.role === "Manager" || parsedUser?.role === "Admin" || parsedUser?.role === "manager" || parsedUser?.role === "admin") {
         setIsManager(true);
       }
       if (parsedUser?.role === "Admin") {

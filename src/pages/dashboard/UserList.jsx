@@ -11,7 +11,6 @@ function UserList() {
   const [isLoading, setIsLoading] = useState(true);
   const fetchUsers = async () => {
     try {
-      // isLoading(true);
       const data = await allUsersApi();
       const usersArray = Array.isArray(data) ? data : data.users;
       setUsers(usersArray || []);

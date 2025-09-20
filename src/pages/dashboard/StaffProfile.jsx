@@ -23,7 +23,7 @@ const StaffProfile = () => {
         const storedUser = localStorage.getItem("user");
         if (!storedUser) return;
 
-        const parsedUser = storedUser || JSON.parse(storedUser) || null;
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
         const userId = parsedUser.id || parsedUser._id;
 
         if (!userId) return;
