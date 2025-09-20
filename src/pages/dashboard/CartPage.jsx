@@ -8,8 +8,8 @@ import Loader from "./Loader";
 function CartPage() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const savedUser = localStorage.getItem("user");
+  const storedUser = savedUser || JSON.parse(localStorage.getItem("user")) || null;
   const token = storedUser?.token;
 
   useEffect(() => {
