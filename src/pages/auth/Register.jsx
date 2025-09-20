@@ -22,10 +22,11 @@ const Register = () => {
     }
     try {
       const response = await RegisterAPI(username, email, password, role);
+      console.log("Backend full response ->", response);
       localStorage.setItem("token", response.jwt);
       localStorage.setItem("user", JSON.stringify(response.user));
       toast.success("Registered successfully");
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       const message =
         error.response?.data?.error || "Failed to register. Try again.";
