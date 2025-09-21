@@ -33,6 +33,7 @@ function App() {
     () => !!localStorage.getItem("token")
   );
 
+  const [user, setUser] = useState(null);
   const [role, setRole] = useState(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -74,7 +75,7 @@ function App() {
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
         console.log("✅ Parsed user:", parsed);
-        setUser(parsed);
+        setUser(parsed); // now works ✅
       } else {
         console.log("❌ No user found in localStorage");
         setUser(null);
