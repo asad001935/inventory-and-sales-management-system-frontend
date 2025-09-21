@@ -47,6 +47,26 @@ function App() {
   });
 
   useEffect(() => {
+    // Catch synchronous errors
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error("Global Error Caught:", {
+        message,
+        source,
+        lineno,
+        colno,
+        error,
+      });
+      alert("A runtime error occurred. Check console for details.");
+    };
+
+    // Catch async errors (like in promises)
+    window.onunhandledrejection = function (event) {
+      console.error("Unhandled Promise Rejection:", event.reason);
+      alert("A promise error occurred. Check console for details.");
+    };
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
 
