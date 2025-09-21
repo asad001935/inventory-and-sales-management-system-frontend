@@ -19,7 +19,7 @@ function Navbar() {
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-    const parsedUser = JSON.parse(user);
+    const parsedUser = user ? JSON.parse(user): null;
     if (parsedUser.role === "User" || parsedUser.role === "user") {
       setIsUser(true);
     }

@@ -37,7 +37,7 @@ function App() {
     try {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
         return parsedUser?.role || null;
       }
     } catch (err) {
