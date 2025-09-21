@@ -15,8 +15,8 @@ function Login({ onLogin }) {
     e.preventDefault();
     try {
       const response = await loginApi(email, password);
-      localStorage.setItem("token", response.jwt);
-      localStorage.setItem("user", JSON.stringify(response.user));
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       console.log(`Logged in successfully as: ${response.user.username}`);
       toast.success(`Logged in successfully as: ${response.user.username}`);
       if (onLogin) {

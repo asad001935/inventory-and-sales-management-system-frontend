@@ -23,8 +23,9 @@ const Register = () => {
     try {
       const response = await RegisterAPI(username, email, password, role);
       console.log("Backend full response ->", response);
-      localStorage.setItem("token", response.jwt);
-      localStorage.setItem("user", JSON.stringify(response.user));
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
       toast.success("Registered successfully");
       navigate("/login");
     } catch (error) {
