@@ -15,8 +15,8 @@ function Login({ onLogin }) {
     e.preventDefault();
     try {
       const response = await loginApi(email, password);
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.jwt);
+      localStorage.setItem("user", JSON.stringify(response.user));
       console.log(`Logged in successfully as: ${response.user.username}`);
       toast.success(`Logged in successfully as: ${response.user.username}`);
       if (onLogin) {
@@ -27,7 +27,7 @@ function Login({ onLogin }) {
       const message =
         error.response?.data?.error || "Failed to login. Try again.";
       console.error("Error in login:", message);
-      toast.alert(message);
+      toast.error(message);
     }
   };
 
