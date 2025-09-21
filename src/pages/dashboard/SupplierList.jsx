@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Pencil, Plus, Trash2, UserRoundSearch, X } from "lucide-react";
-import { useState, useEffect } from "react";
 import { deleteSupplier, getAllSuppliers } from "../../api/supplierApi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,34 +8,38 @@ import Loader from "./Loader";
 
 function SupplierList() {
   const [suppliers, setSuppliers] = useState([]);
-  const navigate = useNavigate();
-  const [isManager, setIsManager] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [searchedName, setSearchedName] = useState("");
   const [filteredUser, setFilteredUser] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [isManager, setIsManager] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
-      if (parsedUser?.role === "Manager" || parsedUser?.role === "Admin" || parsedUser?.role === "manager" || parsedUser?.role === "admin") {
-        setIsManager(true);
-      }
-      if (parsedUser?.role === "Admin" || parsedUser?.role === "admin") {
-        setIsAdmin(true);
-      }
+      const parsedUser = JSON.parse(savedUser);
+      const role = parsedUser?.role?.toLowerCase();
+
+      if (role === "manager" || role === "admin") setIsManager(true);
+      if (role === "admin") setIsAdmin(true);
     }
-    const fetchedSuppliers = async () => {
+
+    const fetchSuppliers = async () => {
       try {
         const data = await getAllSuppliers();
         setSuppliers(data.suppliers || []);
       } catch (error) {
+        toast.error("Failed to fetch suppliers");
         console.error("Error fetching suppliers:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchedSuppliers();
+
+    fetchSuppliers();
   }, []);
 
   const handleDelete = async (id) => {
@@ -45,7 +48,7 @@ function SupplierList() {
 
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: `Do you really want to delete supplier: ${supplierName}?`,
+      text: `Do you really want to delete ${supplierName}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -57,20 +60,15 @@ function SupplierList() {
 
     try {
       const data = await deleteSupplier(id);
-
-      if (data && data.success !== false) {
+      if (data?.success) {
         setSuppliers((prev) => prev.filter((s) => s._id !== id));
         toast.success("Supplier deleted successfully!");
       } else {
-        toast.error(data.error || "Failed to delete supplier");
+        toast.error(data?.error || "Failed to delete supplier");
       }
     } catch (error) {
-      toast.error("Unexpected error occurred while deleting supplier");
+      toast.error("Unexpected error while deleting supplier");
     }
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/edit-supplier/${id}`);
   };
 
   const handleSearch = () => {
@@ -78,12 +76,14 @@ function SupplierList() {
       setFilteredUser([]);
       return;
     }
+
+    const lowerCaseQuery = searchedName.toLowerCase();
     const result = suppliers.filter(
       (s) =>
-        s.name.toLowerCase().includes(searchedName.toLowerCase()) ||
-        s.companyName.toLowerCase().includes(searchedName.toLowerCase()) ||
-        s.email.toLowerCase().includes(searchedName.toLowerCase()) ||
-        s.address.toLowerCase().includes(searchedName.toLowerCase())
+        s.name?.toLowerCase().includes(lowerCaseQuery) ||
+        s.companyName?.toLowerCase().includes(lowerCaseQuery) ||
+        s.email?.toLowerCase().includes(lowerCaseQuery) ||
+        s.address?.toLowerCase().includes(lowerCaseQuery)
     );
     setFilteredUser(result);
   };
@@ -94,6 +94,8 @@ function SupplierList() {
   };
 
   if (isLoading) return <Loader />;
+
+  const displayedSuppliers = filteredUser.length > 0 ? filteredUser : suppliers;
 
   return (
     <div className="p-6">
@@ -117,12 +119,14 @@ function SupplierList() {
               />
             )}
           </div>
+
           <button
             onClick={handleSearch}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition shadow-md"
           >
             Search
           </button>
+
           {isManager && (
             <button
               onClick={() => navigate("/add-supplier")}
@@ -134,9 +138,9 @@ function SupplierList() {
         </div>
       </div>
 
-      {suppliers.length === 0 ? (
+      {displayedSuppliers.length === 0 ? (
         <p className="text-center text-gray-500 text-lg py-10">
-          No suppliers yet.
+          No suppliers found.
         </p>
       ) : (
         <div className="overflow-x-auto shadow-md rounded-lg">
@@ -167,37 +171,36 @@ function SupplierList() {
             </thead>
 
             <tbody>
-              {(filteredUser.length > 0 ? filteredUser : suppliers).map(
-                (supplier) => (
-                  <tr
-                    key={supplier._id}
-                    className="border-b hover:bg-gray-50 transition"
-                  >
-                    <td className="px-4 py-3">{supplier.name}</td>
-                    <td className="px-4 py-3">{supplier.companyName}</td>
-                    <td className="px-4 py-3">{supplier.contact}</td>
-                    <td className="px-4 py-3">{supplier.email}</td>
-                    <td className="px-4 py-3">{supplier.address}</td>
-                    {isAdmin && (
-                      <td className="px-4 py-3 flex justify-center gap-3">
-                        <Link
-                          to={`/edit-supplier/${supplier._id}`}
-                          state={{ supplier }}
-                          className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 border border-blue-500 rounded-lg hover:bg-blue-50 transition"
-                        >
-                          <Pencil size={16} /> Edit
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(supplier._id)}
-                          className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 border border-red-500 rounded-lg hover:bg-red-50 transition"
-                        >
-                          <Trash2 size={16} /> Delete
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                )
-              )}
+              {displayedSuppliers.map((supplier) => (
+                <tr
+                  key={supplier._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  <td className="px-4 py-3">{supplier.name}</td>
+                  <td className="px-4 py-3">{supplier.companyName}</td>
+                  <td className="px-4 py-3">{supplier.contact}</td>
+                  <td className="px-4 py-3">{supplier.email}</td>
+                  <td className="px-4 py-3">{supplier.address}</td>
+
+                  {isAdmin && (
+                    <td className="px-4 py-3 flex justify-center gap-3">
+                      <Link
+                        to={`/edit-supplier/${supplier._id}`}
+                        state={{ supplier }}
+                        className="flex items-center gap-1 px-3 py-1 text-sm text-blue-600 border border-blue-500 rounded-lg hover:bg-blue-50 transition"
+                      >
+                        <Pencil size={16} /> Edit
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(supplier._id)}
+                        className="flex items-center gap-1 px-3 py-1 text-sm text-red-600 border border-red-500 rounded-lg hover:bg-red-50 transition"
+                      >
+                        <Trash2 size={16} /> Delete
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

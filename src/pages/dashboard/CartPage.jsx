@@ -9,8 +9,17 @@ function CartPage() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const savedUser = localStorage.getItem("user");
-  const storedUser = savedUser ? JSON.parse(localStorage.getItem("user")) : null;
-  const token = storedUser?.token;
+  let storedUser = null;
+  let token = null;
+
+  try {
+    storedUser = savedUser ? JSON.parse(savedUser) : null;
+    token = storedUser?.token || null;
+  } catch (error) {
+    console.error("Invalid user in localStorage", error);
+    storedUser = null;
+    token = null;
+  }
 
   useEffect(() => {
     const fetchCart = async () => {

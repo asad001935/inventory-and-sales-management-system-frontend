@@ -16,17 +16,23 @@ function OrderList() {
   const [isManager, setIsManager] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [staffOnly, setStaffOnly] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
-      if (parsedUser?.role === "Manager" || parsedUser?.role === "Admin" || parsedUser?.role === "manager" || parsedUser?.role === "admin") {
-        setIsManager(true);
-      }
-      if (parsedUser?.role === "Admin") {
-        setIsAdmin(true);
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        const role = parsedUser?.role?.toLowerCase();
+
+        if (role === "manager" || role === "admin") {
+          setIsManager(true);
+        }
+        if (role === "admin") {
+          setIsAdmin(true);
+        }
+      } catch (err) {
+        console.error("Invalid user data in localStorage:", err);
       }
     }
 

@@ -69,22 +69,21 @@ function ProductList() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      setIsLoggedOut(true);
-      return;
-    }
+    if (!token) return;
 
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        const role = parsedUser?.role?.toLowerCase();
 
-      if (parsedUser?.role === "Admin" || parsedUser?.role === "admin") setIsAdmin(true);
-      if (parsedUser?.role === "Manager" || parsedUser?.role === "manager" )
-        setIsManager(true);
-      if (parsedUser?.role.toLowerCase() === "staff" || parsedUser?.role.toLowerCase() === "Staff") setIsStaff(true);
-      if (parsedUser?.role.toLowerCase() === "manager" || parsedUser?.role.toLowerCase() === "Manager") setIsManager(true);
-      if (parsedUser?.role.toLowerCase() === "user" || parsedUser?.role.toLowerCase() === "User") setUser(true);
+        if (role === "admin") setIsAdmin(true);
+        if (role === "manager") setIsManager(true);
+        if (role === "staff") setIsStaff(true);
+        if (role === "user") setIsUser(true);
+      } catch (err) {
+        console.error("Invalid user in localStorage:", err);
+      }
     }
   }, []);
 
@@ -111,7 +110,7 @@ function ProductList() {
       if (res.success) {
         toast.success(`Product added to cart: ${product.name}`);
         setCart(res.cart.items);
-        localStorage.setItem("cart", JSON.stringify(res.cart.items)); 
+        localStorage.setItem("cart", JSON.stringify(res.cart.items));
       } else {
         toast.error(res.message || "Failed to add to cart");
       }
@@ -165,14 +164,15 @@ function ProductList() {
           </button>
         </div>
 
-        {isManager || isAdmin && (
-          <button
-            onClick={() => navigate("/add-product")}
-            className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold rounded-xl shadow hover:opacity-90 transition"
-          >
-            <Plus size={18} /> Add Product
-          </button>
-        )}
+        {isManager ||
+          (isAdmin && (
+            <button
+              onClick={() => navigate("/add-product")}
+              className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold rounded-xl shadow hover:opacity-90 transition"
+            >
+              <Plus size={18} /> Add Product
+            </button>
+          ))}
       </div>
 
       <h1 className="text-4xl font-bold text-gray-900 mb-6">Products</h1>
