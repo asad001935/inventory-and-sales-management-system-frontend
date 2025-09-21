@@ -67,6 +67,25 @@ function App() {
   }, []);
 
   useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      console.log("🔎 Stored user raw:", storedUser);
+
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        console.log("✅ Parsed user:", parsed);
+        setUser(parsed);
+      } else {
+        console.log("❌ No user found in localStorage");
+        setUser(null);
+      }
+    } catch (err) {
+      console.error("🔥 Error parsing user from localStorage:", err);
+      setUser(null);
+    }
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
 
