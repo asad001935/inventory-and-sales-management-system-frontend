@@ -50,8 +50,8 @@ function UserList() {
     const result = users.filter(
       (d) =>
         d.username.toLowerCase().includes(searchedName.toLowerCase()) ||
-        d.email.toLowerCase().includes(searchedName.toLowerCase()) ||
-        d.role.toLowerCase().includes(searchedName.toLowerCase())
+        d.email.toLowerCase().includes(searchedName.toLowerCase()) 
+        // d?.role.toLowerCase().includes(searchedName.toLowerCase())
     );
     setFilteredUsers(result);
   };

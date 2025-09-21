@@ -80,7 +80,7 @@ function ProductList() {
         if (role === "admin") setIsAdmin(true);
         if (role === "manager") setIsManager(true);
         if (role === "staff") setIsStaff(true);
-        if (role === "user") setIsUser(true);
+        if (role === "user") setUser(true);
       } catch (err) {
         console.error("Invalid user in localStorage:", err);
       }
