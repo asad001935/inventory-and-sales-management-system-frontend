@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ContactForm from "./ContactForm";
 
+
 function HomeDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -13,29 +14,8 @@ function HomeDashboard() {
     } else {
       setIsLoggedIn(false);
     }
-  }, []); // ✅ run once on mount
+  }, []);
 
-  if (isLoggedIn) {
-    // ✅ If user is logged in → show a Dashboard quick access
-    return (
-      <section className="flex-1 flex items-center justify-center h-screen bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-6 text-gray-900">
-            Welcome Back 👋
-          </h1>
-          <p className="text-gray-600 mb-8">You are logged in!</p>
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:opacity-90 transition"
-          >
-            Go to Dashboard
-          </button>
-        </div>
-      </section>
-    );
-  }
-
-  // ✅ Default: If no token → show public Home page
   return (
     <>
       <section className="flex-1 flex items-center justify-center bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 px-6 pt-28 pb-20 text-center">
@@ -67,7 +47,6 @@ function HomeDashboard() {
         </div>
       </section>
 
-      {/* Featured Products */}
       <section className="py-20 bg-white border-t">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
@@ -78,7 +57,7 @@ function HomeDashboard() {
           </p>
 
           <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {/* Product Cards */}
+            {/* Product Card 1 */}
             <div className="p-8 border rounded-2xl shadow-sm hover:shadow-xl transition bg-white">
               <img
                 src="https://static.vecteezy.com/system/resources/thumbnails/022/411/565/small_2x/quality-product-rubber-grunge-stamp-seal-stock-vector.jpg"
@@ -95,6 +74,7 @@ function HomeDashboard() {
               </Link>
             </div>
 
+            {/* Product Card 2 */}
             <div className="p-8 border rounded-2xl shadow-sm hover:shadow-xl transition bg-white">
               <img
                 src="https://laz-img-cdn.alicdn.com/images/ims-web/TB1YNixXy_1gK0jSZFqXXcpaXXa.jpg"
@@ -130,7 +110,7 @@ function HomeDashboard() {
         </div>
       </section>
 
-      <ContactForm />
+      <ContactForm/>
     </>
   );
 }
