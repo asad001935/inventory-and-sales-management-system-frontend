@@ -60,17 +60,17 @@ function App() {
       alert("A runtime error occurred. Check console for details.");
     };
 
-    useEffect(() => {
-      console.log("🟢 Current role:", role);
-      console.log("🟢 Current user:", user);
-    }, [role, user]);
-
     // Catch async errors (like in promises)
     window.onunhandledrejection = function (event) {
       console.error("Unhandled Promise Rejection:", event.reason);
       alert("A promise error occurred. Check console for details.");
     };
   }, []);
+
+  useEffect(() => {
+    console.log("🟢 Current role:", role);
+    console.log("🟢 Current user:", user);
+  }, [role, user]);
 
   useEffect(() => {
     try {
