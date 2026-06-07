@@ -60,6 +60,7 @@ function App() {
       alert("A runtime error occurred. Check console for details.");
     };
 
+
     // Catch async errors (like in promises)
     window.onunhandledrejection = function (event) {
       console.error("Unhandled Promise Rejection:", event.reason);
@@ -67,10 +68,6 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log("🟢 Current role:", role);
-    console.log("🟢 Current user:", user);
-  }, [role, user]);
 
   useEffect(() => {
     try {
@@ -79,14 +76,14 @@ function App() {
 
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
-        console.log("✅ Parsed user:", parsed);
+        console.log("Parsed user:", parsed);
         setUser(parsed); // now works ✅
       } else {
-        console.log("❌ No user found in localStorage");
+        console.log("No user found in localStorage");
         setUser(null);
       }
     } catch (err) {
-      console.error("🔥 Error parsing user from localStorage:", err);
+      console.error("Error parsing user from localStorage:", err);
       setUser(null);
     }
   }, []);
